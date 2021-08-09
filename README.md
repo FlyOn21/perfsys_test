@@ -119,7 +119,7 @@ Response API for POST request
 ```
 >```"blob_id"```: id records in the DynamoDB database where the result of the work will be recorded images recognition
 ```"callback_url"```: url for callback when the result of image recognition is ready    
-```"upload_url"```: the link where the client downloads the image for recognition. Put request type. The link is valid for half an hour.
+```"upload_url"```: the link where the client uploaded image for recognition. Put request type. The link is valid for half an hour.
 > 
 Response API for GET requests
 ```bash
