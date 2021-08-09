@@ -12,7 +12,6 @@ provider:
   stage: dev
   environment:
     BLOBS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-    BUCKET: "recognition"
   iam:
     role:
       statements:
@@ -25,12 +24,7 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.BLOBS_TABLE}"
-        - Effect: Allow
-          Action:
-           - s3:PutObject
-           - s3:GetObject
-           - s3:PostObject
-          Resource: 'arn:aws:s3:::${self:provider.environment.BUCKET}/*'
+
 functions:
   get:
     handler: getblobs.get_blob
@@ -86,19 +80,3 @@ resources:
         TableName: ${self:provider.environment.BLOBS_TABLE}
         StreamSpecification:
           StreamViewType: NEW_IMAGE
-    TodosBucket:
-      Type: 'AWS::S3::Bucket'
-      Properties:
-        BucketName: ${self:provider.environment.BUCKET}
-        AccessControl: Public
-        CorsConfiguration:
-          CorsRules:
-            - AllowedMethods:
-                - GET
-                - PUT
-                - POST
-            - AllowedOrigins:
-                - "*"
-            - AllowedHeaders:
-                - "*"
-

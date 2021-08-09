@@ -17,6 +17,11 @@ authorName: 'Zhohliev Pavlo'
 This example is made to work with the Serverless Framework dashboard which includes advanced features like CI/CD,
 monitoring, metrics, etc. 
 ##MacOS/Linux
+ - Create yourself AWS account using the [link](https://portal.aws.amazon.com/billing/signup?redirect_url=https%3A%2F%2Faws.amazon.com%2Fregistration-confirmation&language=ru_ru#/start). 
+ - Use the [tutorial](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/) to create a user.
+ - [Create s3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html) for uploud recognition images
+
+
 To install the latest version serverless, run this command in your terminal:
 ```
 curl -o- -L https://slss.io/install | bash
@@ -32,6 +37,7 @@ In the project folder, rename the ```example.env``` file to ```.env```, after wh
 REGION_NAME=deploy_region
 ACCESS_KEY=your_access_key
 SECRET_KEY=your_secret_key
+BUCKET=name_your_bucket_to_uploud_images
 ```
 Launching the deployment api
 ```
