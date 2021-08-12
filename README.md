@@ -19,7 +19,7 @@ monitoring, metrics, etc.
 ##MacOS/Linux
  - Create yourself AWS account using the [link](https://portal.aws.amazon.com/billing/signup?redirect_url=https%3A%2F%2Faws.amazon.com%2Fregistration-confirmation&language=ru_ru#/start). 
  - Use the [tutorial](https://www.serverless.com/framework/docs/providers/aws/guide/credentials/) to create a user.
- - [Create s3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html) for uploud recognition images
+ 
 
 
 To install the latest version serverless, run this command in your terminal:
@@ -30,15 +30,18 @@ $ serverless login
 Install the necessary plugins
 ```
 $ serverless plugin install --name serverless-dotenv-plugin 
-$ serverless plugin install --name serverless-python-requirements 
+$ serverless plugin install --name serverless-python-requirements
+$ serverless plugin install --name serverless-s3-remover
 ```
-In the project folder, rename the ```example.env``` file to ```.env```, after which we fill in the environment variables necessary for deployment
+In the api_files folder, rename the ```example.env``` file to ```.env```, after which we fill in the environment variables necessary for deployment
 ```
 REGION_NAME=deploy_region
 ACCESS_KEY=your_access_key
 SECRET_KEY=your_secret_key
-BUCKET=name_your_bucket_to_uploud_images
+USER_ARN=arn_your_user
 ```
+> USER_ARN you can find on the page of the user AWS you created. 
+> 
 Launching the deployment api
 ```
 $ serverless deploy
@@ -117,9 +120,9 @@ Response API for POST request
   "upload_url": "https://blobs.s3.eu-central-1.amazonaws.com/b1bb07b8-04c6-4f3e-9574-3c1d633f7a8e"
 }
 ```
->```"blob_id"```: id records in the DynamoDB database where the result of the work will be recorded images recognition
+>```"blob_id"```: id records in the DynamoDB database where the result of the work will be recorded images recognition  
 ```"callback_url"```: url for callback when the result of image recognition is ready    
-```"upload_url"```: the link where the client uploaded image for recognition. Put request type. The link is valid for half an hour.
+```"upload_url"```: the link where the client uploaded image for recognition. Put request type. The link is valid for half an hour.  
 > 
 Response API for GET requests
 ```bash

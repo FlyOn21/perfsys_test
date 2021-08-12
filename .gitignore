@@ -125,7 +125,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+api_files/.env
 .venv
 env/
 venv/
@@ -161,4 +161,9 @@ cython_debug/
 .idea/
 .serverless/
 node_modules/
+package-lock.json
+package.json
+api_files/package.json
+api_files/package-lock.json
+api_files/.env
 

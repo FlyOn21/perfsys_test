@@ -10,11 +10,21 @@ provider:
   lambdaHashingVersion: '20201221'
   region: eu-central-1
   stage: dev
+  s3:
+    bucketOne:
+      name: ${self:app}${self:provider.stage}
   environment:
     BLOBS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    BUCKET: ${self:app}${self:provider.stage}
   iam:
     role:
       statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource: 'arn:aws:s3:::${self:app}${self:provider.stage}'
         - Effect: Allow
           Action:
             - dynamodb:Query
@@ -24,7 +34,10 @@ provider:
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
           Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.BLOBS_TABLE}"
-
+custom:
+  remover:
+     buckets:
+       - ${self:app}${self:provider.stage}
 functions:
   get:
     handler: getblobs.get_blob
@@ -44,7 +57,7 @@ functions:
     handler: rekognition_servicess.uploaded_file
     events:
       - s3:
-          bucket: ${self:provider.environment.BUCKET}
+          bucket: ${self:app}${self:provider.stage}
           event: s3:ObjectCreated:Put
           existing: true
 
@@ -63,6 +76,7 @@ functions:
 plugins:
   - serverless-python-requirements
   - serverless-dotenv-plugin
+  - serverless-s3-remover
 resources:
   Resources:
     TodosDynamoDbTable:
@@ -80,3 +94,18 @@ resources:
         TableName: ${self:provider.environment.BLOBS_TABLE}
         StreamSpecification:
           StreamViewType: NEW_IMAGE
+    TodoS3Bucket:
+      Type: 'AWS::S3::Bucket'
+      Properties:
+        BucketName: ${self:app}${self:provider.stage}
+    BucketPolicy:
+      Type: 'AWS::S3::BucketPolicy'
+      Properties:
+        Bucket: ${self:app}${self:provider.stage}
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal: { "AWS": "${self:provider.environment.USER_ARN}"}
+              Action: s3:*
+              Resource: ["arn:aws:s3:::${self:app}${self:provider.stage}","arn:aws:s3:::${self:app}${self:provider.stage}/*"]
