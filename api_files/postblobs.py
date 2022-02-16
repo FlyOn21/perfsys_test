@@ -30,6 +30,7 @@ def _upload_url(uuid):
 
 def create_blob(event, context):
     event_body = event.get("body")
+    print(event_body)
     if not event_body:
         return response_bad_request
 
